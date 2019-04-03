@@ -43,17 +43,17 @@ body=xmlsoup.find("body")
 table=body.find_all("table")
 p = parser.make2d(table[3])
 
-#table 체크 > 0부터 시작한다. 테이블은 내가생각한 테이블이 아니고 컴퓨터의 테이블이다. 꼭 개발자모드 켜자
-#print(p)
+# table 체크 > 0부터 시작한다. 테이블은 내가생각한 테이블이 아니고 컴퓨터의 테이블이다. 꼭 개발자모드 켜자
+# print(p)
 
 sheet=pd.DataFrame(p[2:], columns=["구분","28기3분기_3개월","28기3분기_누적","27기3분기_3개월","27기3분기_누적"])
 
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].str.replace(",","")
 sheet["temp"]=sheet["28기3분기_3개월"].str[0]
 
-sheet.loc[sheet["temp"]=="","28기분기_3개월"]="0"
+sheet.ix[sheet["temp"]=="","28기분기_3개월"]="0"
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].str.split(")").str[0]
-sheet.loc[sheet["28기3분기_3개월"]=="","28기3분기_3개월"]="0"
+sheet.ix[sheet["28기3분기_3개월"]=="","28기3분기_3개월"]="0"
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].astype(int)
 
 sale = sheet[shee["구분"]=="매출액"].iloc[0,1]
@@ -63,3 +63,5 @@ sale_profit_ratio=(sale-sale_cost)/sale*100
 #round 는 반올림
 sale_profit_ratio=round(sale_profit_ratio,1)
 print("매출총이익율은 "+str(sale_profit_ratio)+"%입니다")
+
+print(p)
