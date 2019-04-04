@@ -1,4 +1,4 @@
-#-*-coding:utf-8-*-
+#coding=utf-8
 
 from urllib.request import urlopen
 import pandas as pd
@@ -26,12 +26,12 @@ for t in te:
 data=data.reset_index(drop=True)
 
 #체크
-#url2="http://dart.fss.or.kr/dsaf001/main.do?rcpNo="+data['rcp_no'][0]
-#webbrowser.open(url2)
+# url1="http://dart.fss.or.kr/dsaf001/main.do?rcpNo="+data['rcp_no'][0]
+# webbrowser.open(url1)
 
 url2="http://dart.fss.or.kr/report/viewer.do?rcpNo=20181114000172&dcmNo=6379378&eleId=15&offset=572516&length=68651&dtd=dart3.xsd"
 #체크
-#webbrowser.open(url2)
+# webbrowser.open(url2)
 
 ##테이블1{자산총계, 부채총계, 자본총계}, 테이블2{매출액} 을 가져오고 싶은디..
 
@@ -51,9 +51,9 @@ sheet=pd.DataFrame(p[2:], columns=["구분","28기3분기_3개월","28기3분기
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].str.replace(",","")
 sheet["temp"]=sheet["28기3분기_3개월"].str[0]
 
-sheet.ix[sheet["temp"]=="","28기분기_3개월"]="0"
+sheet.loc[sheet["temp"]=="(","28기분기_3개월"]=sheet["28기분기_3개월"].str.replace("(","-")
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].str.split(")").str[0]
-sheet.ix[sheet["28기3분기_3개월"]=="","28기3분기_3개월"]="0"
+sheet.loc[sheet["28기3분기_3개월"]=="","28기3분기_3개월"]="0"
 sheet["28기3분기_3개월"]=sheet["28기3분기_3개월"].astype(int)
 
 sale = sheet[shee["구분"]=="매출액"].iloc[0,1]
