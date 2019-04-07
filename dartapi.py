@@ -11,6 +11,7 @@ API_KEY="dc33c48f272b1248e6aa8877e06472cd5c3ad98e"
 
 ##종목_반복필요
 company_code="042110"
+# company_code="058610"
 def make_report(company_code):
 
 
@@ -33,9 +34,11 @@ def make_report(company_code):
         data=pd.concat([data,temp])
 
     data=data.reset_index(drop=True)
-    url2="http://dart.fss.or.kr/report/viewer.do?rcpNo=20181114000172&dcmNo=6379378&eleId=15&offset=572516&length=68651&dtd=dart3.xsd"
+    # 하기 에스피지 주소
+    # url2="http://dart.fss.or.kr/report/viewer.do?rcpNo=20181114000172&dcmNo=6379378&eleId=15&offset=572516&length=68651&dtd=dart3.xsd"
+    url2="http://dart.fss.or.kr/report/viewer.do?rcpNo=20190401000041&dcmNo=6595755&eleId=15&offset=624483&length=101382&dtd=dart3.xsd"
     #체크
-    # webbrowser.open(url2)
+    webbrowser.open(url2)
     return url2,data['rcp_no'][0]
     ##리스트해서 전체 분기별,반기별,etc 전체 보고서 긁어오기
 
