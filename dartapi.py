@@ -10,17 +10,17 @@ API_KEY="dc33c48f272b1248e6aa8877e06472cd5c3ad98e"
 
 
 ##종목_반복필요
-company_code="058610"
+company_code="042110"
 def make_report(company_code):
 
 
     url1 = "http://dart.fss.or.kr/api/search.xml?auth="+API_KEY+"&crp_cd="+company_code+"&start_dt=19990101&bsn_tp=A001&bsn_tp=A002&bsn_tp=A003"
     #체크
     # url1="http://dart.fss.or.kr/dsaf001/main.do?rcpNo="+data['rcp_no'][0]
-    # webbrowser.open(url1)
+    webbrowser.open(url1)
 
     # resultXML=urlopen(url.encode("UTF-8").decode("ASCII"))
-    resultXML=urlopen(url)
+    resultXML=urlopen(url1)
     result=resultXML.read()
     xmlsoup=BeautifulSoup(result,'html.parser')
 
@@ -36,9 +36,14 @@ def make_report(company_code):
     url2="http://dart.fss.or.kr/report/viewer.do?rcpNo=20181114000172&dcmNo=6379378&eleId=15&offset=572516&length=68651&dtd=dart3.xsd"
     #체크
     # webbrowser.open(url2)
+    return url2,data['rcp_no'][0]
+    ##리스트해서 전체 분기별,반기별,etc 전체 보고서 긁어오기
 
 ##테이블1{자산총계, 부채총계, 자본총계}, 테이블2{매출액} 을 가져오고 싶은디..
 
+url2 = make_report(company_code)
+print(url2)
+print("here")
 #매출액
 report=urlopen(url2)
 r=report.read()
