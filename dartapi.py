@@ -101,7 +101,7 @@ def find_table(url2,rcpno):
         value_list.append(name)
 
     sheet=pd.DataFrame(p[2:], colums=name_list)
-    sheet.loc[sheet["구분"]''"수익(매출액)",["구분"]]="매출액"
+    sheet.loc[sheet["구분"]=="수익(매출액)",["구분"]]="매출액"
     return sheet, name_list, value_list
 
 # table 체크 > 0부터 시작한다. 테이블은 내가생각한 테이블이 아니고 컴퓨터의 테이블이다. 꼭 개발자모드 켜자
@@ -138,10 +138,14 @@ def make_profit(sheet,name_list,value_list):
     temp_list.append("매출총이익률")
 
     for time in range(len(value_list)):
+        sale = sheet[sheet["구분"]=="매출액"].iloc[0,time+1]
+        sale_cost = sheet[sheet["구분"]=="매출원가"].iloc[0,time+1]
+        sale_profit_ratio=(sale-sale_cost)/sale*100
+        sale_profit_ratio = round(sale_profit_ratio, 1)
+        temp_list.append(sale_profit_ratio)
 
-
-
-
+    ouput=pd.DataFrame([temp_list],columns=name_list)
+    return output
 #데이터 프레임 잘 불러왔는지 확인 empty 면 데이터 안 긁힌것.??
 
 # sale = sheet[sheet["구분"]=="매출액"].iloc[0,1]
@@ -153,3 +157,55 @@ def make_profit(sheet,name_list,value_list):
 # print("매출총이익율은 "+str(sale_profit_ratio)+"% 입니다")
 #
 # print(p)
+
+
+#이걸 다긁어와야하는데. 으잉?!
+company_list=list(["000400","004990","005930","014680","214370","271560","217270","280360"])
+
+company_name=list(["롯데손해보험","롯데지주","삼성전자","한솔케미칼","케어젠","오리온","넵튠","롯데제과"])
+
+output_last=pd.DataFrame(columns=["구분", "최근_분기", "최근_분기_누적","이전_분기","이전_분기_누적"])
+
+
+
+for i in range(len(company_list)):
+
+    try:
+
+        url2, rcpno=make_report(company_list[i])
+
+        sheet, name_list, value_list = find_table(url2, rcpno)
+
+        output = make_profit(sheet, name_list, value_list)
+
+
+
+        if len(output.columns)==3:
+
+            output.columns = ["구분", "최근_분기", "최근_분기_누적"]
+
+        elif len(output.columns)==5:
+
+            output.columns = ["구분", "최근_분기", "최근_분기_누적","이전_분기","이전_분기_누적"]
+
+
+
+        output["company_code"]=company_list[i]
+
+        output["company_name"] = company_name[i]
+
+        output["url"] = url2
+
+
+
+        output_last=pd.concat([output_last,output])
+
+    except Exception as e:
+
+        print(company_name[i]+" is error")
+
+        print(e)
+
+
+
+    output_last.to_csv("output_last.csv")
