@@ -161,7 +161,6 @@ def make_profit(sheet,name_list,value_list):
 
 #이걸 다긁어와야하는데. 으잉?!
 company_list=list(["000400","004990","005930","014680","214370","271560","217270","280360"])
-
 company_name=list(["롯데손해보험","롯데지주","삼성전자","한솔케미칼","케어젠","오리온","넵튠","롯데제과"])
 
 output_last=pd.DataFrame(columns=["구분", "최근_분기", "최근_분기_누적","이전_분기","이전_분기_누적"])
@@ -169,43 +168,23 @@ output_last=pd.DataFrame(columns=["구분", "최근_분기", "최근_분기_누�
 
 
 for i in range(len(company_list)):
-
     try:
-
         url2, rcpno=make_report(company_list[i])
-
         sheet, name_list, value_list = find_table(url2, rcpno)
-
         output = make_profit(sheet, name_list, value_list)
 
-
-
         if len(output.columns)==3:
-
             output.columns = ["구분", "최근_분기", "최근_분기_누적"]
-
         elif len(output.columns)==5:
-
             output.columns = ["구분", "최근_분기", "최근_분기_누적","이전_분기","이전_분기_누적"]
 
-
-
         output["company_code"]=company_list[i]
-
         output["company_name"] = company_name[i]
-
         output["url"] = url2
 
-
-
         output_last=pd.concat([output_last,output])
-
     except Exception as e:
-
         print(company_name[i]+" is error")
-
         print(e)
-
-
 
     output_last.to_csv("output_last.csv")
